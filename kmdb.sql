@@ -104,6 +104,7 @@ DROP TABLE IF EXISTS movies;
 DROP TABLE IF EXISTS actors;
 DROP TABLE IF EXISTS actors_movies;
 DROP TABLE IF EXISTS studios;
+DROP TABLE IF EXISTS studios_movies;
 
 -- Create new tables, according to your domain model
 CREATE TABLE movies(
@@ -128,8 +129,15 @@ CREATE TABLE actors_movies(
 );
 
 CREATE TABLE studios(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER,
     name TEXT
+);
+
+CREATE TABLE studios_movies(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    movie_id INTEGER,
+    studio_id INTEGER,
+    role TEXT
 );
 
 -- Insert data into your database that reflects the sample data shown above
@@ -176,6 +184,11 @@ VALUES(1, 1, 'Bruce Wayne'),
 INSERT INTO studios(id, name)
 VALUES(1, 'Warner Bros.');
 
+INSERT INTO studios_movies(movie_id, studio_id)
+VALUES(1, 1),
+(2, 1),
+(3, 1);
+
 -- Prints a header for the movies output
 .print "Movies"
 .print "======"
@@ -184,8 +197,10 @@ VALUES(1, 'Warner Bros.');
 -- The SQL statement for the movies output
 SELECT title, year_released, MPAA_rating, name
 FROM movies
+INNER JOIN studios_movies
+ON movies.studio_id = studios_movies.movie_id
 INNER JOIN studios
-ON movies.studio_id = studios.id;
+ON studios_movies.studio_id = studios.id;
 
 -- Prints a header for the cast output
 .print ""
